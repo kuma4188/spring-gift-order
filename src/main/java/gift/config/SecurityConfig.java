@@ -47,7 +47,7 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-				.requestMatchers(new AntPathRequestMatcher("/login/kakao")).permitAll() 
+				.requestMatchers(new AntPathRequestMatcher("/login/kakao")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/api/auth/login")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/user/signup")).permitAll()
