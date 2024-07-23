@@ -23,7 +23,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-
 public class SecurityConfig {
 
 	@Autowired
@@ -48,9 +47,12 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-				.requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
+				.requestMatchers(new AntPathRequestMatcher("/login/kakao")).permitAll() // 카카오 로그인 URL 접근 허용
+				.requestMatchers(new AntPathRequestMatcher("/")).permitAll() // 카카오 로그인 콜백 URL 접근 허용
 				.requestMatchers(new AntPathRequestMatcher("/api/auth/login")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/user/signup")).permitAll()
+				.requestMatchers(new AntPathRequestMatcher("/user/login")).permitAll()
+				.requestMatchers(new AntPathRequestMatcher("/web/products/list")).permitAll() // 인증된 사용자만 접근 가능
 				.anyRequest().authenticated())
 			.csrf((csrf) -> csrf.disable()) // CSRF 비활성화
 			.headers((headers) -> headers.addHeaderWriter(
@@ -61,6 +63,7 @@ public class SecurityConfig {
 			.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
+
 
 	@Bean
 	public AuthenticationManager authenticationManager(
