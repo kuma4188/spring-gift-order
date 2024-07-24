@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: ./API-KEY.properties
 
   http:
     encoding:
@@ -65,7 +67,3 @@ logging:
 jwt:
   secret: dGVzdHNlY3JldGtleWZvckpXVGVuY3J5cHRpb24xMjM0NTY=
   token-validity-in-seconds: 86400
-
-kakao:
-  client-id: 0c05fb1058c786778f09bb4d2bc0151c
-  redirect-uri: http://localhost:8080
