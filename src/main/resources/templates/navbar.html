@@ -1,21 +1,22 @@
+
 <nav th:fragment="navbarFragment"
      class="navbar navbar-expand-lg navbar-light bg-light border-bottom"
      xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
   <style>
     .navbar {
-      padding: 0.2rem 1rem; /* 얇게 만들기 위해 패딩 조절 */
-      border-bottom: 1px solid #ccc; /* navbar과 홈페이지를 분리하는 선 */
+      padding: 0.2rem 1rem;
+      border-bottom: 1px solid #ccc;
     }
     .navbar-nav {
       display: flex;
-      align-items: center; /* 수평 배열 및 정렬 */
+      align-items: center;
     }
     .navbar-nav .nav-item {
-      margin-right: 10px; /* 버튼 간격 조절 */
+      margin-right: 10px;
     }
     .navbar-nav .nav-link {
-      padding: 0.3rem 0.8rem; /* 버튼 크기 조절 */
-      border-radius: 50px; /* 원형 버튼 */
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
     }
     .btn-outline-primary {
       color: #007bff;
@@ -39,7 +40,10 @@
       </ul>
       <ul class="nav-item" sec:authorize="isAuthenticated()">
         <span class="nav-link">
-          <span th:if="${#authentication.name} != null">
+          <span th:if="${session.nickname} != null">
+            [[${session.nickname}]] 님 반갑습니다
+          </span>
+          <span th:if="${session.nickname} == null and ${#authentication.name} != null">
             [[${#authentication.name}]] 님 반갑습니다
           </span>
         </span>

@@ -1,4 +1,30 @@
 spring:
+  config:
+    import: ./API-KEY.properties
+
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${kakao.client-id}
+            redirect-uri: ${kakao.redirect-uri}
+            authorization-grant-type: authorization_code
+            scope: profile_nickname, talk_message
+            client-name: Kakao
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
   thymeleaf:
     enabled: true
     prefix: classpath:/templates/
@@ -29,7 +55,6 @@ jpa:
     console:
       enabled: true
       path: /h2-console
-
 
 logging:
   level:
