@@ -1,7 +1,8 @@
 package gift.service;
 
-import gift.dto.Response.AccessTokenResponse;
+
 import gift.dto.KakaoUserDTO;
+import gift.dto.Response.AccessTokenResponse;
 
 public interface KakaoLoginService {
     AccessTokenResponse getAccessToken(String code);

@@ -1,6 +1,5 @@
 package gift.controller.web;
 
-
 import gift.dto.KakaoUserDTO;
 import gift.dto.Response.AccessTokenResponse;
 import gift.service.KakaoLoginService;
@@ -16,13 +15,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.UriComponentsBuilder;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Collections;
 
 @Controller
 public class KakaoLoginController {
+
+    private static final Logger logger = LoggerFactory.getLogger(KakaoLoginController.class);
 
     @Value("${kakao.client-id}")
     private String clientId;
@@ -30,14 +34,21 @@ public class KakaoLoginController {
     @Value("${kakao.redirect-uri}")
     private String redirectUri;
 
+    private static final String KAKAO_AUTH_URL = "https://kauth.kakao.com/oauth/authorize";
+    private static final String KAKAO_SCOPE = "profile_nickname,talk_message";
+
     @Autowired
     private KakaoLoginService kakaoLoginService;
 
     @RequestMapping("/login/kakao")
     public void redirectToKakao(HttpServletResponse response) throws IOException {
-        String redirectUrl = String.format(
-            "https://kauth.kakao.com/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code&scope=profile_nickname,talk_message",
-            clientId, redirectUri);
+        String redirectUrl = UriComponentsBuilder.fromHttpUrl(KAKAO_AUTH_URL)
+            .queryParam("client_id", clientId)
+            .queryParam("redirect_uri", redirectUri)
+            .queryParam("response_type", "code")
+            .queryParam("scope", KAKAO_SCOPE)
+            .toUriString();
+
         response.sendRedirect(redirectUrl);
     }
 
@@ -68,6 +79,7 @@ public class KakaoLoginController {
             }
         } catch (Exception e) {
             model.addAttribute("error", "An error occurred: " + e.getMessage());
+            logger.error("An error occurred during Kakao login callback", e);
             return "error";
         }
     }
