@@ -52,6 +52,7 @@ public class SecurityConfig {
 				.requestMatchers(new AntPathRequestMatcher("/api/auth/login")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/user/signup")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/user/login")).permitAll()
+				.requestMatchers(new AntPathRequestMatcher("/web/categories/web")).permitAll() // 추가
 				.requestMatchers(new AntPathRequestMatcher("/web/products/list")).permitAll()
 				.anyRequest().authenticated())
 			.csrf((csrf) -> csrf.disable()) // CSRF 비활성화
@@ -63,7 +64,6 @@ public class SecurityConfig {
 			.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
-
 
 	@Bean
 	public AuthenticationManager authenticationManager(

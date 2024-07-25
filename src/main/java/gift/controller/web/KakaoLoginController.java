@@ -85,7 +85,7 @@ public class KakaoLoginController {
                     SiteUser newUser = new SiteUser();
                     newUser.setUsername(nickname);
                     newUser.setPassword("");  // 비밀번호는 카카오에서 관리하므로 빈 값으로 설정
-                    newUser.setEmail("");     // 이메일을 빈 문자열로 설정
+                    newUser.setEmail("");
                     userRepository.save(newUser);
                 }
 
