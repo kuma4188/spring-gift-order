@@ -2,6 +2,8 @@ package gift.controller.web;
 
 import gift.dto.KakaoUserDTO;
 import gift.dto.Response.AccessTokenResponse;
+import gift.model.SiteUser;
+import gift.repository.UserRepository;
 import gift.service.KakaoLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 
 @Controller
 public class KakaoLoginController {
@@ -39,6 +42,9 @@ public class KakaoLoginController {
 
     @Autowired
     private KakaoLoginService kakaoLoginService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @RequestMapping("/login/kakao")
     public void redirectToKakao(HttpServletResponse response) throws IOException {
@@ -68,9 +74,20 @@ public class KakaoLoginController {
                 session.setAttribute("nickname", nickname);
                 kakaoLoginService.sendMessage(tokenResponse.getAccess_token(), nickname);
 
+                // Principal 설정 및 사용자 저장 추가
                 Authentication auth = new UsernamePasswordAuthenticationToken(nickname, null, Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
                 SecurityContextHolder.getContext().setAuthentication(auth);
                 session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+
+                // 사용자 저장 로직 추가
+                Optional<SiteUser> userOptional = userRepository.findByUsername(nickname);
+                if (userOptional.isEmpty()) {
+                    SiteUser newUser = new SiteUser();
+                    newUser.setUsername(nickname);
+                    newUser.setPassword("");  // 비밀번호는 카카오에서 관리하므로 빈 값으로 설정
+                    newUser.setEmail("");     // 이메일을 빈 문자열로 설정
+                    userRepository.save(newUser);
+                }
 
                 return "redirect:/web/products/list";
             } else {

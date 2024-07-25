@@ -1,6 +1,5 @@
 package gift.service;
 
-
 import gift.dto.Request.OptionRequest;
 import gift.dto.Response.WishlistResponse;
 import gift.dto.WishlistDTO;
@@ -45,8 +44,10 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public WishlistResponse addToWishlist(String username, Long productId, int quantity, List<OptionRequest> options) {
-        SiteUser user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Invalid username: " + username));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Invalid product ID: " + productId));
+        SiteUser user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid username: " + username));
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid product ID: " + productId));
 
         Wishlist wishlist = new Wishlist();
         wishlist.setUser(user);
