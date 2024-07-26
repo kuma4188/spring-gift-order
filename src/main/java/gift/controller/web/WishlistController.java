@@ -44,7 +44,6 @@ public class WishlistController {
         model.addAttribute("pageSize", size);
         model.addAttribute("sort", sort);
         model.addAttribute("direction", direction);
-
         return "wishlist";
     }
 
