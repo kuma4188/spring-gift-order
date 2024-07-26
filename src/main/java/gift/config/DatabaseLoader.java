@@ -20,20 +20,21 @@ public class DatabaseLoader {
     public CommandLineRunner initData(ProductRepository repository, CategoryRepository categoryRepository) {
         return args -> {
             // 공통 옵션 생성
-            Option packageOption = new Option("포장 선택", 1, 3000, null);
-            Option deliverOption = new Option("배송비 포함", 1, 2500, null);
+            Option packageOption = new Option("포장 선택", 1, 3000, null , 100);
+            Option deliverOption = new Option("배송비 포함", 1, 2500, null , 100);
 
             // 상품 및 옵션 데이터 삽입
             Product product1 = new Product(2001L, "[기프티콘] BBQ 황금올리브치킨", 20000, "https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/1802204067/B.jpg?315000000", 1);
             List<Option> options1 = Arrays.asList(
-                new Option("[기프티콘] BBQ 황금올리브치킨", 1, 20000, product1),
-                new Option("01. 치즈볼 5알", 1, 6000, product1),
-                new Option(packageOption.getName(), packageOption.getQuantity(), packageOption.getPrice(), product1),
-                new Option(deliverOption.getName(), deliverOption.getQuantity(), deliverOption.getPrice(), product1)
+                new Option("[기프티콘] BBQ 황금올리브치킨", 1, 20000, product1 , 100),
+                new Option("01. 치즈볼 5알", 1, 6000, product1 , 100),
+                new Option(packageOption.getName(), packageOption.getQuantity(), packageOption.getPrice(), product1 ,
+                    packageOption.getMaxQuantity()),
+                new Option(deliverOption.getName(), deliverOption.getQuantity(), deliverOption.getPrice(), product1, deliverOption.getMaxQuantity())
             );
             product1.setOptions(options1);
             repository.save(product1);
-
+/*
             Product product2 = new Product(2002L, "스타벅스 기프트 카드", 0, "https://image.istarbucks.co.kr/cardImg/20200818/007633_WEB.png", 2);
             List<Option> options2 = Arrays.asList(
                 new Option("스타벅스 기프트 카드", 1, 0, product2),
@@ -117,7 +118,7 @@ public class DatabaseLoader {
             );
             product9.setOptions(options9);
             repository.save(product9);
-
+*/
             categoryRepository.save(new Category(1, "교환권", "#6c95d1", "https://png.pngtree.com/png-vector/20230330/ourmid/pngtree-red-ticket-icon-vector-illustration-png-image_6674739.png", ""));
             categoryRepository.save(new Category(2, "상품권", "#6c95d1", "https://imagescdn.gettyimagesbank.com/500/201809/a11186062.jpg", ""));
             categoryRepository.save(new Category(3, "뷰티", "#6c95d1", "https://img.imbc.com/adams/Corner/20175/131391670413239055.jpg", ""));
