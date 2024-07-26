@@ -26,7 +26,7 @@ public class Wishlist {
     private int price;
 
     @Column(nullable = false)
-    private boolean hidden = false; // 숨김 상태를 나타내는 필드 추가
+    private boolean hidden = false; 
 
     @ManyToMany
     @JoinTable(
@@ -34,9 +34,8 @@ public class Wishlist {
         joinColumns = @JoinColumn(name = "wishlist_id"),
         inverseJoinColumns = @JoinColumn(name = "option_id")
     )
-    private List<Option> options; // 옵션 목록 필드 추가
+    private List<Option> options;
 
-    // 기본 생성자, getter 및 setter
 
     public Wishlist() {}
 

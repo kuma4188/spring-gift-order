@@ -49,7 +49,7 @@ function orderWishlistItem(button) {
     .then(response => response.text())
     .then(data => {
         alert(data);
-        window.location.reload(); // 주문 후 새로고침
+        window.location.reload();
     })
     .catch(error => console.error('Error:', error));
 }
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     document.querySelectorAll('.order-wishlist').forEach(function(button) {
         button.addEventListener('click', function() {
-            orderWishlistItem(this); // 주문하기 버튼 이벤트 추가
+            orderWishlistItem(this);
         });
     });
 });

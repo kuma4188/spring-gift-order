@@ -111,13 +111,11 @@ public class WishlistServiceImpl implements WishlistService {
     public void orderWishlist(Long id) {
         Wishlist wishlist = wishlistRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid wishlist ID: " + id));
 
-        // 옵션 수량 차감
         for (Option option : wishlist.getOptions()) {
             option.setMaxQuantity(option.getMaxQuantity() - option.getQuantity());
             optionRepository.save(option);
         }
 
-        // 위시리스트 항목을 숨김 처리
         wishlist.setHidden(true);
         wishlistRepository.save(wishlist);
     }

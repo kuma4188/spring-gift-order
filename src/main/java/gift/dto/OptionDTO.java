@@ -20,7 +20,7 @@ public class OptionDTO {
     private int price;
     @NotNull(message = "상품 ID는 필수 값입니다.")
     private Long productId;
-    private int maxQuantity; // 최대 옵션 수량 추가
+    private int maxQuantity;
 
     public OptionDTO() {}
 
@@ -90,7 +90,7 @@ public class OptionDTO {
             option.getQuantity(),
             option.getPrice(),
             option.getProduct().getId(),
-            option.getMaxQuantity() // 최대 옵션 수량 추가
+            option.getMaxQuantity()
         );
     }
 }

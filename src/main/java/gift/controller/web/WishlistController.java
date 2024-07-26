@@ -76,7 +76,7 @@ public class WishlistController {
     @PostMapping("/order/{id}")
     @ResponseBody
     public ResponseEntity<String> orderWishlist(@PathVariable("id") Long id) {
-        wishlistService.orderWishlist(id); // 주문하기 기능 호출
+        wishlistService.orderWishlist(id);
         return ResponseEntity.ok("주문이 완료되었습니다.");
     }
 }

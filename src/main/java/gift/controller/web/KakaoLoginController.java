@@ -74,17 +74,15 @@ public class KakaoLoginController {
                 session.setAttribute("nickname", nickname);
                 kakaoLoginService.sendMessage(tokenResponse.getAccess_token(), nickname);
 
-                // Principal 설정 및 사용자 저장 추가
                 Authentication auth = new UsernamePasswordAuthenticationToken(nickname, null, Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
                 SecurityContextHolder.getContext().setAuthentication(auth);
                 session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
 
-                // 사용자 저장 로직 추가
                 Optional<SiteUser> userOptional = userRepository.findByUsername(nickname);
                 if (userOptional.isEmpty()) {
                     SiteUser newUser = new SiteUser();
                     newUser.setUsername(nickname);
-                    newUser.setPassword("");  // 비밀번호는 카카오에서 관리하므로 빈 값으로 설정
+                    newUser.setPassword("");
                     newUser.setEmail("");
                     userRepository.save(newUser);
                 }

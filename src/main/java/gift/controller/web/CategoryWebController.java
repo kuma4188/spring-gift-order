@@ -33,10 +33,9 @@ public class CategoryWebController {
         return "categoryDetail";
     }
 
-    // 추가: /api/categories/web 경로 처리
     @GetMapping("/web")
     public String getCategoriesForWeb(Model model) {
         model.addAttribute("categories", categoryService.getAllCategories());
-        return "category"; // category.html 반환
+        return "category";
     }
 }
