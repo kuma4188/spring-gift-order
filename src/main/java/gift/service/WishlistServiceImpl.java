@@ -36,7 +36,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public List<WishlistDTO> getWishlistByUser(String username) {
-        List<Wishlist> wishlistEntities = wishlistRepository.findByUserUsernameAndHiddenFalse(username); // 숨김 상태가 false인 항목만 가져옴
+        List<Wishlist> wishlistEntities = wishlistRepository.findByUserUsernameAndHiddenFalse(username);
         return wishlistEntities.stream()
             .map(WishlistDTO::convertToDTO)
             .collect(Collectors.toList());
@@ -97,7 +97,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public Page<WishlistDTO> getWishlistByUser1(String username, Pageable pageable) {
-        Page<Wishlist> wishlistEntities = wishlistRepository.findByUserUsernameAndHiddenFalse(username, pageable); // 숨김 상태가 false인 항목만 가져옴
+        Page<Wishlist> wishlistEntities = wishlistRepository.findByUserUsernameAndHiddenFalse(username, pageable);
         return wishlistEntities.map(WishlistDTO::convertToDTO);
     }
 

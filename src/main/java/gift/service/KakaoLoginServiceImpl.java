@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -18,7 +16,6 @@ import java.util.List;
 @Service
 public class KakaoLoginServiceImpl implements KakaoLoginService {
 
-    private static final Logger logger = LoggerFactory.getLogger(KakaoLoginServiceImpl.class);
 
     @Value("${kakao.client-id}")
     private String clientId;
@@ -49,12 +46,10 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
         ResponseEntity<AccessTokenResponse> response = restTemplate.postForEntity(KAKAO_TOKEN_URL, request, AccessTokenResponse.class);
 
         if (!response.getStatusCode().is2xxSuccessful()) {
-            logger.error("Failed to get access token: {}", response.getStatusCode());
             throw new RuntimeException("Failed to get access token: " + response.getStatusCode());
         }
 
         AccessTokenResponse accessTokenResponse = response.getBody();
-        logger.info("Received access token: {}", accessTokenResponse.getAccess_token());
         return accessTokenResponse;
     }
 
@@ -67,7 +62,6 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
         ResponseEntity<KakaoUserDTO> userInfoResponse = restTemplate.exchange(KAKAO_USER_URL, HttpMethod.GET, userInfoRequest, KakaoUserDTO.class);
 
         if (!userInfoResponse.getStatusCode().is2xxSuccessful()) {
-            logger.error("Failed to retrieve user information: {}", userInfoResponse.getStatusCode());
             throw new RuntimeException("Failed to retrieve user information: " + userInfoResponse.getStatusCode());
         }
 
@@ -87,22 +81,23 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
         RestTemplate restTemplate = restTemplate();
         HttpHeaders headers = createHeadersWithBearerAuth(accessToken);
 
-        // Properly format the message as a JSON string
+        // 메시지를 JSON 문자열로 형식화
         String templateObject = String.format(
             "{\"object_type\":\"text\",\"text\":\"%s\",\"link\":{\"web_url\":\"http://localhost:8080\",\"mobile_web_url\":\"http://localhost:8080\"}}",
-            message.replace("\n", "\\n")  // Ensure newlines are properly escaped
+            message.replace("\n", "\\n")
         );
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("template_object", templateObject);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(KAKAO_MESSAGE_URL, request, String.class);
-        if (response.getStatusCode().is2xxSuccessful()) {
-            logger.info("Message sent successfully");
-        } else {
-            logger.error("Failed to send message: {}", response.getStatusCode());
-        }
+        restTemplate.postForEntity(KAKAO_MESSAGE_URL, request, String.class);
+    }
+
+    // 로그인 시 메시지를 보내는 메서드 추가
+    public void sendLoginMessage(String accessToken, String nickname) {
+        String message = String.format("%s님이 Spring-gift-order에 로그인했습니다.", nickname);
+        sendMessage(accessToken, message);
     }
 
     private HttpHeaders createHeaders(MediaType contentType) {

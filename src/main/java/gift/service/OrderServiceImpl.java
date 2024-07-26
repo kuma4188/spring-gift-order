@@ -6,6 +6,7 @@ import gift.dto.WishlistDTO;
 import gift.model.Option;
 import gift.model.Order;
 import gift.model.SiteUser;
+import gift.model.Wishlist;
 import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
 import gift.repository.UserRepository;
@@ -54,18 +55,21 @@ public class OrderServiceImpl implements OrderService {
         order.setUser(user);
         order.setOrderDateTime(LocalDateTime.now());
 
-        // Option 정보를 Order에 추가
         for (WishlistDTO.OptionDTO optionDTO : wishlistDTO.getOptions()) {
             Option option = optionRepository.findById(optionDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid option ID: " + optionDTO.getId()));
             order.setOption(option);
             order.setQuantity(optionDTO.getQuantity());
+
+            option.setMaxQuantity(option.getMaxQuantity() - optionDTO.getQuantity());
+            optionRepository.save(option);
             orderRepository.save(order);
         }
 
-        // 메시지 생성
         String message = createMessage(kakaoUserDTO, wishlistDTO);
         kakaoLoginService.sendMessage(accessToken, message);
+
+        hideWishlistItem(wishlistId);
 
         return OrderDTO.from(order);
     }
@@ -81,5 +85,13 @@ public class OrderServiceImpl implements OrderService {
         messageBuilder.append(String.format("따라서 총 금액은 %d원 입니다.", wishlistDTO.getTotalPrice()));
 
         return messageBuilder.toString();
+    }
+
+    // wishlist 항목 숨김 처리 메서드
+    private void hideWishlistItem(Long wishlistId) {
+        Wishlist wishlist = wishlistRepository.findById(wishlistId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid wishlist ID: " + wishlistId));
+        wishlist.setHidden(true);
+        wishlistRepository.save(wishlist);
     }
 }
