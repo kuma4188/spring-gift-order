@@ -112,7 +112,7 @@
         <ul>
           <li th:each="option : ${wishlist.options}">
             <span th:text="'→ ' + ${option.name} + ' x '"></span>
-            <select class="option-quantity" th:data-wishlist-id="${wishlist.id}" th:data-option-id="${option.id}">
+            <select class="option-quantity" th:data-wishlist-id="${wishlist.id}">
               <option th:each="i : ${#numbers.sequence(1, 10)}" th:value="${i}" th:text="${i}" th:selected="${i == option.quantity}"></option>
             </select>
             <span th:text="' x ' + ${option.price} + ' = ' + ${option.price * option.quantity} + '원'"></span>
@@ -146,5 +146,6 @@
        class="page-btn">Next</a>
   </div>
 </div>
+<meta name="access-token" content="[[${accessToken}]]">
 </body>
 </html>

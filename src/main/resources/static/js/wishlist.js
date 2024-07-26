@@ -1,7 +1,5 @@
-
 function updateOptionQuantity(selectElement) {
     const wishlistId = selectElement.getAttribute('data-wishlist-id');
-    const optionId = selectElement.getAttribute('data-option-id');
     const quantity = selectElement.value;
 
     fetch(`/web/wishlist/update/${wishlistId}`, {
@@ -9,7 +7,7 @@ function updateOptionQuantity(selectElement) {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: new URLSearchParams({quantity: quantity, optionId: optionId})
+        body: new URLSearchParams({ quantity: quantity })
     })
     .then(response => response.json())
     .then(data => {
@@ -40,18 +38,28 @@ function deleteWishlistItem(button) {
 
 function orderWishlistItem(button) {
     const wishlistId = button.getAttribute('data-wishlist-id');
-    fetch(`/web/wishlist/order/${wishlistId}`, {
+
+    fetch(`/api/orders/order/${wishlistId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        },
+        body: new URLSearchParams()
     })
-    .then(response => response.text())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
-        alert(data);
+        alert('Order placed successfully');
         window.location.reload();
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while placing the order');
+    });
 }
 
 document.addEventListener("DOMContentLoaded", function() {
