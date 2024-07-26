@@ -34,7 +34,6 @@ public class ProductDTO {
         this.categoryName = categoryName;
     }
 
-    // Getters and Setters
 
     public Long getId() {
         return id;
