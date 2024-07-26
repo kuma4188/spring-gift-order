@@ -38,7 +38,7 @@ public class OptionServiceImpl implements OptionService {
     @Override
     public void saveOption(OptionDTO optionDTO) {
         Product product = productRepository.findById(optionDTO.getProductId()).orElseThrow();
-        Option option = new Option(optionDTO.getName(), optionDTO.getQuantity(), optionDTO.getPrice(), product);
+        Option option = new Option(optionDTO.getName(), optionDTO.getQuantity(), optionDTO.getPrice(), product, optionDTO.getMaxQuantity()); // 최대 옵션 수량 추가
         optionRepository.save(option);
     }
 
@@ -48,6 +48,7 @@ public class OptionServiceImpl implements OptionService {
         option.setName(optionDTO.getName());
         option.setQuantity(optionDTO.getQuantity());
         option.setPrice(optionDTO.getPrice());
+        option.setMaxQuantity(optionDTO.getMaxQuantity()); // 최대 옵션 수량 추가
         optionRepository.save(option);
     }
 

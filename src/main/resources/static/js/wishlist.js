@@ -1,3 +1,4 @@
+
 function updateOptionQuantity(selectElement) {
     const wishlistId = selectElement.getAttribute('data-wishlist-id');
     const optionId = selectElement.getAttribute('data-option-id');
@@ -37,6 +38,22 @@ function deleteWishlistItem(button) {
     .catch(error => console.error('Error:', error));
 }
 
+function orderWishlistItem(button) {
+    const wishlistId = button.getAttribute('data-wishlist-id');
+    fetch(`/web/wishlist/order/${wishlistId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    })
+    .then(response => response.text())
+    .then(data => {
+        alert(data);
+        window.location.reload(); // 주문 후 새로고침
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll('.delete-wishlist').forEach(function(button) {
         button.addEventListener('click', function() {
@@ -51,6 +68,11 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll('.option-quantity').forEach(select => {
         select.addEventListener('change', function() {
             updateOptionQuantity(this);
+        });
+    });
+    document.querySelectorAll('.order-wishlist').forEach(function(button) {
+        button.addEventListener('click', function() {
+            orderWishlistItem(this); // 주문하기 버튼 이벤트 추가
         });
     });
 });

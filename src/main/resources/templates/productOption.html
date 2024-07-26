@@ -74,6 +74,7 @@
     <th>이름</th>
     <th>가격</th>
     <th>수량</th>
+    <th>최대 수량</th> <!-- 최대 수량 추가 -->
     <th>선택</th>
   </tr>
   </thead>
@@ -86,6 +87,7 @@
         <option th:each="i : ${#numbers.sequence(1, 10)}" th:value="${i}" th:text="${i}"></option>
       </select>
     </td>
+    <td th:text="${option.maxQuantity}">최대 수량</td> <!-- 최대 수량 표시 -->
     <td>
       <input type="checkbox" name="optionSelect" th:checked="${iterStat.index == 0}" th:attr="disabled=${iterStat.index == 0}" onclick="updateTotalPrice()">
     </td>
