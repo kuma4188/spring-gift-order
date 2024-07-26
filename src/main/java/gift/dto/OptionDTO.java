@@ -20,15 +20,17 @@ public class OptionDTO {
     private int price;
     @NotNull(message = "상품 ID는 필수 값입니다.")
     private Long productId;
+    private int maxQuantity; // 최대 옵션 수량 추가
 
     public OptionDTO() {}
 
-    public OptionDTO(Long id, String name, int quantity, int price, Long productId) {
+    public OptionDTO(Long id, String name, int quantity, int price, Long productId, int maxQuantity) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.productId = productId;
+        this.maxQuantity = maxQuantity;
     }
 
     // Getters and Setters
@@ -73,13 +75,22 @@ public class OptionDTO {
         this.productId = productId;
     }
 
+    public int getMaxQuantity() {
+        return maxQuantity;
+    }
+
+    public void setMaxQuantity(int maxQuantity) {
+        this.maxQuantity = maxQuantity;
+    }
+
     public static OptionDTO convertToDTO(Option option) {
         return new OptionDTO(
             option.getId(),
             option.getName(),
             option.getQuantity(),
             option.getPrice(),
-            option.getProduct().getId()
+            option.getProduct().getId(),
+            option.getMaxQuantity() // 최대 옵션 수량 추가
         );
     }
 }
