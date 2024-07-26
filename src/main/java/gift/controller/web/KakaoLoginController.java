@@ -37,8 +37,6 @@ public class KakaoLoginController {
     @Value("${kakao.redirect-uri}")
     private String redirectUri;
 
-    private static final String KAKAO_AUTH_URL = "https://kauth.kakao.com/oauth/authorize";
-    private static final String KAKAO_SCOPE = "profile_nickname,talk_message";
 
     @Autowired
     private KakaoLoginService kakaoLoginService;
@@ -46,15 +44,15 @@ public class KakaoLoginController {
     @Autowired
     private UserRepository userRepository;
 
+
     @RequestMapping("/login/kakao")
     public void redirectToKakao(HttpServletResponse response) throws IOException {
-        String redirectUrl = UriComponentsBuilder.fromHttpUrl(KAKAO_AUTH_URL)
+        String redirectUrl = UriComponentsBuilder.fromHttpUrl("https://kauth.kakao.com/oauth/authorize")
             .queryParam("client_id", clientId)
             .queryParam("redirect_uri", redirectUri)
             .queryParam("response_type", "code")
-            .queryParam("scope", KAKAO_SCOPE)
+            .queryParam("scope", "profile_nickname,talk_message")
             .toUriString();
-
         response.sendRedirect(redirectUrl);
     }
 
@@ -69,6 +67,9 @@ public class KakaoLoginController {
             AccessTokenResponse tokenResponse = kakaoLoginService.getAccessToken(code);
             KakaoUserDTO userInfo = kakaoLoginService.getUserInfo(tokenResponse.getAccess_token());
             String nickname = kakaoLoginService.extractNickname(userInfo);
+            session.setAttribute("kakaoUserDTO", userInfo);
+            System.out.println("로그인 할떄 발급 받은 토큰 : " +tokenResponse.getAccess_token() );
+            session.setAttribute("accessToken", tokenResponse.getAccess_token());
 
             if (nickname != null) {
                 session.setAttribute("nickname", nickname);

@@ -53,7 +53,9 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
             throw new RuntimeException("Failed to get access token: " + response.getStatusCode());
         }
 
-        return response.getBody();
+        AccessTokenResponse accessTokenResponse = response.getBody();
+        logger.info("Received access token: {}", accessTokenResponse.getAccess_token());
+        return accessTokenResponse;
     }
 
     @Override
@@ -81,11 +83,18 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
     }
 
     @Override
-    public void sendMessage(String accessToken, String nickname) {
+    public void sendMessage(String accessToken, String message) {
         RestTemplate restTemplate = restTemplate();
         HttpHeaders headers = createHeadersWithBearerAuth(accessToken);
 
-        MultiValueMap<String, String> params = createMessageRequestParams(nickname);
+        // Properly format the message as a JSON string
+        String templateObject = String.format(
+            "{\"object_type\":\"text\",\"text\":\"%s\",\"link\":{\"web_url\":\"http://localhost:8080\",\"mobile_web_url\":\"http://localhost:8080\"}}",
+            message.replace("\n", "\\n")  // Ensure newlines are properly escaped
+        );
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("template_object", templateObject);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(KAKAO_MESSAGE_URL, request, String.class);
@@ -116,12 +125,6 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
         params.add("client_id", clientId);
         params.add("redirect_uri", redirectUri);
         params.add("code", code);
-        return params;
-    }
-
-    private MultiValueMap<String, String> createMessageRequestParams(String nickname) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("template_object", String.format("{\"object_type\":\"text\",\"text\":\"%s님이 Spring-gift-order에 로그인했습니다.\",\"link\":{\"web_url\":\"http://localhost:8080\",\"mobile_web_url\":\"http://localhost:8080\"}}", nickname));
         return params;
     }
 }

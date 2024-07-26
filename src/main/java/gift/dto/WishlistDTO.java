@@ -108,7 +108,6 @@ public class WishlistDTO {
         return optionsTotalPrice;
     }
 
-
     public static WishlistDTO convertToDTO(Wishlist wishlist) {
         List<OptionDTO> optionDTOs = wishlist.getOptions().stream()
             .map(OptionDTO::convertToDTO)
@@ -125,5 +124,54 @@ public class WishlistDTO {
             optionDTOs
         );
     }
-}
 
+    public static class OptionDTO {
+        private Long id;
+        private String name;
+        private int quantity;
+        private int price;
+
+        // getters and setters
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(int quantity) {
+            this.quantity = quantity;
+        }
+
+        public int getPrice() {
+            return price;
+        }
+
+        public void setPrice(int price) {
+            this.price = price;
+        }
+
+        public static OptionDTO convertToDTO(gift.model.Option option) {
+            OptionDTO optionDTO = new OptionDTO();
+            optionDTO.setId(option.getId());
+            optionDTO.setName(option.getName());
+            optionDTO.setQuantity(option.getQuantity());
+            optionDTO.setPrice(option.getPrice());
+            return optionDTO;
+        }
+    }
+}

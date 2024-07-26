@@ -26,7 +26,7 @@ public class Wishlist {
     private int price;
 
     @Column(nullable = false)
-    private boolean hidden = false; 
+    private boolean hidden = false;
 
     @ManyToMany
     @JoinTable(
