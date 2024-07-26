@@ -26,7 +26,7 @@ public class Wishlist {
     private int price;
 
     @Column(nullable = false)
-    private boolean hidden = false; 
+    private boolean hidden = false;
 
     @ManyToMany
     @JoinTable(
@@ -50,52 +50,52 @@ public class Wishlist {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public SiteUser getUser() {
         return user;
-    }
-
-    public void setUser(SiteUser user) {
-        this.user = user;
     }
 
     public Product getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
     public int getQuantity() {
         return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
     public int getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
     public boolean isHidden() {
         return hidden;
     }
 
-    public void setHidden(boolean hidden) {
-        this.hidden = hidden;
-    }
-
     public List<Option> getOptions() {
         return options;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUser(SiteUser user) {
+        this.user = user;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     public void setOptions(List<Option> options) {
