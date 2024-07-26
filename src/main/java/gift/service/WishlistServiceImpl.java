@@ -36,7 +36,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public List<WishlistDTO> getWishlistByUser(String username) {
-        List<Wishlist> wishlistEntities = wishlistRepository.findByUserUsername(username);
+        List<Wishlist> wishlistEntities = wishlistRepository.findByUserUsernameAndHiddenFalse(username); // 숨김 상태가 false인 항목만 가져옴
         return wishlistEntities.stream()
             .map(WishlistDTO::convertToDTO)
             .collect(Collectors.toList());
@@ -97,7 +97,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public Page<WishlistDTO> getWishlistByUser1(String username, Pageable pageable) {
-        Page<Wishlist> wishlistEntities = wishlistRepository.findByUserUsername(username, pageable);
+        Page<Wishlist> wishlistEntities = wishlistRepository.findByUserUsernameAndHiddenFalse(username, pageable); // 숨김 상태가 false인 항목만 가져옴
         return wishlistEntities.map(WishlistDTO::convertToDTO);
     }
 
@@ -105,5 +105,20 @@ public class WishlistServiceImpl implements WishlistService {
     public WishlistDTO getWishlistById(Long id) {
         Wishlist wishlist = wishlistRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid wishlist ID: " + id));
         return WishlistDTO.convertToDTO(wishlist);
+    }
+
+    @Override
+    public void orderWishlist(Long id) {
+        Wishlist wishlist = wishlistRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid wishlist ID: " + id));
+
+        // 옵션 수량 차감
+        for (Option option : wishlist.getOptions()) {
+            option.setMaxQuantity(option.getMaxQuantity() - option.getQuantity());
+            optionRepository.save(option);
+        }
+
+        // 위시리스트 항목을 숨김 처리
+        wishlist.setHidden(true);
+        wishlistRepository.save(wishlist);
     }
 }

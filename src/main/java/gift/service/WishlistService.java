@@ -14,4 +14,5 @@ public interface WishlistService {
     WishlistResponse updateQuantity(Long id, int quantity, Long optionId);
     Page<WishlistDTO> getWishlistByUser1(String username, Pageable pageable);
     WishlistDTO getWishlistById(Long id);
+    void orderWishlist(Long id);
 }

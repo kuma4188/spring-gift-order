@@ -72,4 +72,11 @@ public class WishlistController {
         WishlistResponse response = wishlistService.removeFromWishlist(id);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/order/{id}")
+    @ResponseBody
+    public ResponseEntity<String> orderWishlist(@PathVariable("id") Long id) {
+        wishlistService.orderWishlist(id); // 주문하기 기능 호출
+        return ResponseEntity.ok("주문이 완료되었습니다.");
+    }
 }
