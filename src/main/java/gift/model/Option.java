@@ -13,25 +13,28 @@ public class Option {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false )
+    @Column(nullable = false)
     private int quantity;
 
     @Column(nullable = false)
     private int price;
 
+    @Column(nullable = false) // 최대 옵션 수량을 저장하는 필드 추가
+    private int maxQuantity;
+
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-
     public Option() {
     }
 
-    public Option(String name, int quantity, int price, Product product) {
+    public Option(String name, int quantity, int price, Product product, int maxQuantity) {
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.product = product;
+        this.maxQuantity = maxQuantity; // 최대 옵션 수량 초기화
     }
 
     public Long getId() {
@@ -54,6 +57,10 @@ public class Option {
         return product;
     }
 
+    public int getMaxQuantity() {
+        return maxQuantity;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -72,5 +79,9 @@ public class Option {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public void setMaxQuantity(int maxQuantity) {
+        this.maxQuantity = maxQuantity;
     }
 }

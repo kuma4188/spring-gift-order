@@ -8,69 +8,95 @@ import java.util.List;
 public class Wishlist {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private SiteUser user;
 
-    @Column(name = "quantity", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @Column(nullable = false)
     private int quantity;
 
-    @Column(name = "price", nullable = false)
+    @Column(nullable = false)
     private int price;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "wishlist_id")
-    private List<Option> options;
+    @Column(nullable = false)
+    private boolean hidden = false; // 숨김 상태를 나타내는 필드 추가
+
+    @ManyToMany
+    @JoinTable(
+        name = "wishlist_options",
+        joinColumns = @JoinColumn(name = "wishlist_id"),
+        inverseJoinColumns = @JoinColumn(name = "option_id")
+    )
+    private List<Option> options; // 옵션 목록 필드 추가
+
+    // 기본 생성자, getter 및 setter
+
+    public Wishlist() {}
+
+    public Wishlist(SiteUser user, Product product, int quantity, int price) {
+        this.user = user;
+        this.product = product;
+        this.quantity = quantity;
+        this.price = price;
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public SiteUser getUser() {
-        return user;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public List<Option> getOptions() {
-        return options;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public SiteUser getUser() {
+        return user;
     }
 
     public void setUser(SiteUser user) {
         this.user = user;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
+    public int getPrice() {
+        return price;
+    }
+
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public List<Option> getOptions() {
+        return options;
     }
 
     public void setOptions(List<Option> options) {
