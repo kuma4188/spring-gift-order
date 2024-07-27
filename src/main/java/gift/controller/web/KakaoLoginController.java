@@ -5,6 +5,9 @@ import gift.dto.Response.AccessTokenResponse;
 import gift.model.SiteUser;
 import gift.repository.UserRepository;
 import gift.service.KakaoLoginService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,12 +22,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 
 @Controller
+@Tag(name = "Kakao Login API", description = "카카오 로그인 관련 API")
 public class KakaoLoginController {
 
     @Value("${kakao.client-id}")
@@ -33,16 +36,14 @@ public class KakaoLoginController {
     @Value("${kakao.redirect-uri}")
     private String redirectUri;
 
-    private final KakaoLoginService kakaoLoginService;
-    private final UserRepository userRepository;
+    @Autowired
+    private KakaoLoginService kakaoLoginService;
 
-    // 생성자 주입 방식으로 변경
-    public KakaoLoginController(KakaoLoginService kakaoLoginService, UserRepository userRepository) {
-        this.kakaoLoginService = kakaoLoginService;
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     @RequestMapping("/login/kakao")
+    @Operation(summary = "카카오 로그인 리다이렉트", description = "카카오 로그인 페이지로 리다이렉트합니다.")
     public void redirectToKakao(HttpServletResponse response) throws IOException {
         String redirectUrl = UriComponentsBuilder.fromHttpUrl("https://kauth.kakao.com/oauth/authorize")
             .queryParam("client_id", clientId)
@@ -54,6 +55,7 @@ public class KakaoLoginController {
     }
 
     @GetMapping("/")
+    @Operation(summary = "카카오 로그인 콜백", description = "카카오 로그인 콜백 처리")
     public String kakaoCallback(@RequestParam(required = false) String code, Model model, HttpSession session) {
         if (code == null) {
             model.addAttribute("error", "Authorization code is missing");
@@ -77,7 +79,10 @@ public class KakaoLoginController {
 
                 Optional<SiteUser> userOptional = userRepository.findByUsername(nickname);
                 if (userOptional.isEmpty()) {
-                    SiteUser newUser = new SiteUser(nickname, "", "");
+                    SiteUser newUser = new SiteUser();
+                    newUser.setUsername(nickname);
+                    newUser.setPassword("");
+                    newUser.setEmail("");
                     userRepository.save(newUser);
                 }
 
