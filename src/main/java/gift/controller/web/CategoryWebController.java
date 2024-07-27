@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/web/categories")
 public class CategoryWebController {
@@ -29,5 +31,11 @@ public class CategoryWebController {
         CategoryDTO category = categoryService.getCategoryById(id);
         model.addAttribute("category", category);
         return "categoryDetail";
+    }
+
+    @GetMapping("/web")
+    public String getCategoriesForWeb(Model model) {
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "category";
     }
 }

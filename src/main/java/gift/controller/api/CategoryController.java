@@ -22,4 +22,9 @@ public class CategoryController {
     public List<CategoryDTO> getCategories() {
         return categoryService.getAllCategories();
     }
+
+    @GetMapping("/web")
+    public List<CategoryDTO> getCategoriesForWeb() {
+        return categoryService.getAllCategories();
+    }
 }

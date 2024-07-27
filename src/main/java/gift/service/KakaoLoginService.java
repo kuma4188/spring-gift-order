@@ -9,4 +9,5 @@ public interface KakaoLoginService {
     KakaoUserDTO getUserInfo(String accessToken);
     String extractNickname(KakaoUserDTO userInfo);
     void sendMessage(String accessToken, String nickname);
+    void sendLoginMessage(String accessToken, String nickname);
 }

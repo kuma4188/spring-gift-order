@@ -27,7 +27,7 @@ public class ProductRepositoryTest {
     @DisplayName("상품 추가할때 성공적으로 작동되는 경우")
     void addProductPrice() {
         // Given
-        Product product = new Product(1234L,"Test Product", 1000, "test.jpg" , 1;
+        Product product = new Product(1234L,"Test Product", 1000, "test.jpg" , 1);
 
         // When
         Product savedProduct = productRepository.save(product);

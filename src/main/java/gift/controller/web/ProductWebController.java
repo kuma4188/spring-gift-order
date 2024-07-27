@@ -59,13 +59,13 @@ public class ProductWebController {
     public String getProductById(@PathVariable("id") Long id, Model model) {
         ProductDTO product = productService.getProductById(id);
         model.addAttribute("product", product);
-        return "productDetail"; // product detail view의 이름을 반환
+        return "productDetail";
     }
 
     @GetMapping("/add")
     public String addProductForm(Model model) {
         model.addAttribute("product", new ProductDTO());
-        return "addProduct"; // add product form view의 이름을 반환
+        return "addProduct";
     }
 
     @PostMapping("/add")
@@ -98,7 +98,7 @@ public class ProductWebController {
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
-        return "redirect:/web/products/list"; // 상품 목록 페이지로 리다이렉트
+        return "redirect:/web/products/list";
     }
 
     // 규칙 3가지

@@ -1,6 +1,5 @@
 function updateOptionQuantity(selectElement) {
     const wishlistId = selectElement.getAttribute('data-wishlist-id');
-    const optionId = selectElement.getAttribute('data-option-id');
     const quantity = selectElement.value;
 
     fetch(`/web/wishlist/update/${wishlistId}`, {
@@ -8,7 +7,7 @@ function updateOptionQuantity(selectElement) {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: new URLSearchParams({quantity: quantity, optionId: optionId})
+        body: new URLSearchParams({ quantity: quantity })
     })
     .then(response => response.json())
     .then(data => {
@@ -37,6 +36,32 @@ function deleteWishlistItem(button) {
     .catch(error => console.error('Error:', error));
 }
 
+function orderWishlistItem(button) {
+    const wishlistId = button.getAttribute('data-wishlist-id');
+
+    fetch(`/api/orders/order/${wishlistId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams()
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert('Order placed successfully');
+        window.location.reload();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while placing the order');
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll('.delete-wishlist').forEach(function(button) {
         button.addEventListener('click', function() {
@@ -51,6 +76,11 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll('.option-quantity').forEach(select => {
         select.addEventListener('change', function() {
             updateOptionQuantity(this);
+        });
+    });
+    document.querySelectorAll('.order-wishlist').forEach(function(button) {
+        button.addEventListener('click', function() {
+            orderWishlistItem(this);
         });
     });
 });

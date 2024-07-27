@@ -20,57 +20,66 @@ public class OptionDTO {
     private int price;
     @NotNull(message = "상품 ID는 필수 값입니다.")
     private Long productId;
+    @Max(value = 100000000, message = "수량은 최대 1억개 이하이어야 합니다.")
+    private int maxQuantity;
 
     public OptionDTO() {}
 
-    public OptionDTO(Long id, String name, int quantity, int price, Long productId) {
+    public OptionDTO(Long id, String name, int quantity, int price, Long productId, int maxQuantity) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.productId = productId;
+        this.maxQuantity = maxQuantity;
     }
-
-    // Getters and Setters
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getQuantity() {
         return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
     public int getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
     public Long getProductId() {
         return productId;
     }
 
+    public int getMaxQuantity() {
+        return maxQuantity;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
     public void setProductId(Long productId) {
         this.productId = productId;
+    }
+
+    public void setMaxQuantity(int maxQuantity) {
+        this.maxQuantity = maxQuantity;
     }
 
     public static OptionDTO convertToDTO(Option option) {
@@ -79,7 +88,8 @@ public class OptionDTO {
             option.getName(),
             option.getQuantity(),
             option.getPrice(),
-            option.getProduct().getId()
+            option.getProduct().getId(),
+            option.getMaxQuantity()
         );
     }
 }

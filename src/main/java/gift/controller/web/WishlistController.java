@@ -44,7 +44,6 @@ public class WishlistController {
         model.addAttribute("pageSize", size);
         model.addAttribute("sort", sort);
         model.addAttribute("direction", direction);
-
         return "wishlist";
     }
 
@@ -71,5 +70,12 @@ public class WishlistController {
     public ResponseEntity<WishlistResponse> removeFromWishlist(@PathVariable("id") Long id) {
         WishlistResponse response = wishlistService.removeFromWishlist(id);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/order/{id}")
+    @ResponseBody
+    public ResponseEntity<String> orderWishlist(@PathVariable("id") Long id) {
+        wishlistService.orderWishlist(id);
+        return ResponseEntity.ok("주문이 완료되었습니다.");
     }
 }

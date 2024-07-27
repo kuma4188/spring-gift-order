@@ -1,6 +1,5 @@
 package gift.service;
 
-
 import gift.dto.Request.OptionRequest;
 import gift.dto.Response.WishlistResponse;
 import gift.dto.WishlistDTO;
@@ -37,7 +36,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public List<WishlistDTO> getWishlistByUser(String username) {
-        List<Wishlist> wishlistEntities = wishlistRepository.findByUserUsername(username);
+        List<Wishlist> wishlistEntities = wishlistRepository.findByUserUsernameAndHiddenFalse(username);
         return wishlistEntities.stream()
             .map(WishlistDTO::convertToDTO)
             .collect(Collectors.toList());
@@ -45,8 +44,10 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public WishlistResponse addToWishlist(String username, Long productId, int quantity, List<OptionRequest> options) {
-        SiteUser user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Invalid username: " + username));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Invalid product ID: " + productId));
+        SiteUser user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid username: " + username));
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid product ID: " + productId));
 
         Wishlist wishlist = new Wishlist();
         wishlist.setUser(user);
@@ -96,7 +97,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public Page<WishlistDTO> getWishlistByUser1(String username, Pageable pageable) {
-        Page<Wishlist> wishlistEntities = wishlistRepository.findByUserUsername(username, pageable);
+        Page<Wishlist> wishlistEntities = wishlistRepository.findByUserUsernameAndHiddenFalse(username, pageable);
         return wishlistEntities.map(WishlistDTO::convertToDTO);
     }
 
@@ -104,5 +105,18 @@ public class WishlistServiceImpl implements WishlistService {
     public WishlistDTO getWishlistById(Long id) {
         Wishlist wishlist = wishlistRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid wishlist ID: " + id));
         return WishlistDTO.convertToDTO(wishlist);
+    }
+
+    @Override
+    public void orderWishlist(Long id) {
+        Wishlist wishlist = wishlistRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid wishlist ID: " + id));
+
+        for (Option option : wishlist.getOptions()) {
+            option.setMaxQuantity(option.getMaxQuantity() - option.getQuantity());
+            optionRepository.save(option);
+        }
+
+        wishlist.setHidden(true);
+        wishlistRepository.save(wishlist);
     }
 }
