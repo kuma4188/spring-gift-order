@@ -3,6 +3,8 @@ package gift.controller.api;
 import gift.jwt.JwtTokenProvider;
 import gift.jwt.JwtUserDetailsService;
 import gift.user.UserCreateForm;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/api/auth")
+@Tag(name = "Login API", description = "로그인 관련 API")
 public class LoginController {
 
     private final AuthenticationManager authenticationManager;
@@ -26,6 +29,7 @@ public class LoginController {
 
     @PostMapping("/login")
     @ResponseBody
+    @Operation(summary = "로그인", description = "사용자 로그인 처리")
     public Map<String, String> login(@RequestBody UserCreateForm userCreateForm) {
         try {
             Authentication authentication = authenticationManager.authenticate(

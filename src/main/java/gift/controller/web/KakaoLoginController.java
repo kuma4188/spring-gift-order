@@ -5,6 +5,8 @@ import gift.dto.Response.AccessTokenResponse;
 import gift.model.SiteUser;
 import gift.repository.UserRepository;
 import gift.service.KakaoLoginService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +27,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 @Controller
+@Tag(name = "Kakao Login API", description = "카카오 로그인 관련 API")
 public class KakaoLoginController {
 
     @Value("${kakao.client-id}")
@@ -33,15 +36,14 @@ public class KakaoLoginController {
     @Value("${kakao.redirect-uri}")
     private String redirectUri;
 
-
     @Autowired
     private KakaoLoginService kakaoLoginService;
 
     @Autowired
     private UserRepository userRepository;
 
-
     @RequestMapping("/login/kakao")
+    @Operation(summary = "카카오 로그인 리다이렉트", description = "카카오 로그인 페이지로 리다이렉트합니다.")
     public void redirectToKakao(HttpServletResponse response) throws IOException {
         String redirectUrl = UriComponentsBuilder.fromHttpUrl("https://kauth.kakao.com/oauth/authorize")
             .queryParam("client_id", clientId)
@@ -53,6 +55,7 @@ public class KakaoLoginController {
     }
 
     @GetMapping("/")
+    @Operation(summary = "카카오 로그인 콜백", description = "카카오 로그인 콜백 처리")
     public String kakaoCallback(@RequestParam(required = false) String code, Model model, HttpSession session) {
         if (code == null) {
             model.addAttribute("error", "Authorization code is missing");

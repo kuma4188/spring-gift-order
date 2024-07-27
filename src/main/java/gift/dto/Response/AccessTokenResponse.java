@@ -1,11 +1,23 @@
 package gift.dto.Response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "액세스 토큰 응답")
 public class AccessTokenResponse {
+
+    @Schema(description = "액세스 토큰", example = "eyJhbGciOiJIUzI1...")
     private String access_token;
+
+    @Schema(description = "토큰 타입", example = "bearer")
     private String token_type;
+
+    @Schema(description = "리프레시 토큰", example = "eyJhbGciOiJIUzI1...")
     private String refresh_token;
+
+    @Schema(description = "만료 시간(초)", example = "3600")
     private int expires_in;
+
+    @Schema(description = "스코프", example = "profile")
     private String scope;
 
     public String getAccess_token() {

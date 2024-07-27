@@ -4,6 +4,8 @@ import gift.dto.Request.AddToWishlistRequest;
 import gift.dto.Response.WishlistResponse;
 import gift.dto.WishlistDTO;
 import gift.service.WishlistService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/web/wishlist")
+@Tag(name = "Wishlist API", description = "위시리스트 관련 API")
 public class WishlistController {
 
     private final WishlistService wishlistService;
@@ -28,6 +31,7 @@ public class WishlistController {
     }
 
     @GetMapping
+    @Operation(summary = "위시리스트 조회", description = "사용자의 위시리스트를 조회합니다.")
     public String getWishlist(Principal principal, Model model,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
@@ -49,6 +53,7 @@ public class WishlistController {
 
     @PostMapping("/add")
     @ResponseBody
+    @Operation(summary = "위시리스트 추가", description = "상품을 위시리스트에 추가합니다.")
     public ResponseEntity<WishlistResponse> addToWishlist(@RequestBody AddToWishlistRequest request, Principal principal) {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new WishlistResponse(false));
@@ -60,6 +65,7 @@ public class WishlistController {
 
     @PostMapping("/update/{id}")
     @ResponseBody
+    @Operation(summary = "위시리스트 수량 수정", description = "위시리스트에 있는 상품의 수량을 수정합니다.")
     public ResponseEntity<WishlistResponse> updateQuantity(@PathVariable("id") Long id, @RequestParam("quantity") int quantity, @RequestParam("optionId") Long optionId) {
         WishlistResponse response = wishlistService.updateQuantity(id, quantity, optionId);
         return ResponseEntity.ok(response);
@@ -67,6 +73,7 @@ public class WishlistController {
 
     @PostMapping("/delete/{id}")
     @ResponseBody
+    @Operation(summary = "위시리스트 삭제", description = "위시리스트에서 상품을 삭제합니다.")
     public ResponseEntity<WishlistResponse> removeFromWishlist(@PathVariable("id") Long id) {
         WishlistResponse response = wishlistService.removeFromWishlist(id);
         return ResponseEntity.ok(response);
@@ -74,6 +81,7 @@ public class WishlistController {
 
     @PostMapping("/order/{id}")
     @ResponseBody
+    @Operation(summary = "위시리스트 주문", description = "위시리스트의 상품을 주문합니다.")
     public ResponseEntity<String> orderWishlist(@PathVariable("id") Long id) {
         wishlistService.orderWishlist(id);
         return ResponseEntity.ok("주문이 완료되었습니다.");

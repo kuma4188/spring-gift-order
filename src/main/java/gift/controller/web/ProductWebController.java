@@ -4,6 +4,8 @@ import gift.dto.ProductDTO;
 import gift.exception.ErrorCode;
 import gift.exception.InvalidProductNameException;
 import gift.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/web/products")
+@Tag(name = "Product Web API", description = "웹 상품 관련 API")
 public class ProductWebController {
 
     private final ProductService productService;
@@ -28,6 +31,7 @@ public class ProductWebController {
     }
 
     @GetMapping("/list")
+    @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회하여 목록을 반환합니다.")
     public String getAllProducts(Model model,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
@@ -56,6 +60,7 @@ public class ProductWebController {
     }
 
     @GetMapping("/detail/{id}")
+    @Operation(summary = "상품 ID로 조회", description = "지정된 상품 ID에 해당하는 상품을 조회합니다.")
     public String getProductById(@PathVariable("id") Long id, Model model) {
         ProductDTO product = productService.getProductById(id);
         model.addAttribute("product", product);
@@ -63,12 +68,14 @@ public class ProductWebController {
     }
 
     @GetMapping("/add")
+    @Operation(summary = "상품 추가 폼", description = "새로운 상품을 추가하기 위한 폼을 반환합니다.")
     public String addProductForm(Model model) {
         model.addAttribute("product", new ProductDTO());
         return "addProduct";
     }
 
     @PostMapping("/add")
+    @Operation(summary = "상품 추가", description = "새로운 상품을 추가합니다.")
     public String addProduct(@Valid @ModelAttribute("product") ProductDTO productDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "addProduct";
@@ -79,13 +86,15 @@ public class ProductWebController {
     }
 
     @GetMapping("/edit/{id}")
+    @Operation(summary = "상품 수정 폼", description = "지정된 상품을 수정하기 위한 폼을 반환합니다.")
     public String editProductForm(@PathVariable("id") Long id, Model model) {
         ProductDTO product = productService.getProductById(id);
         model.addAttribute("product", product);
-        return "editProduct"; // edit product form view의 이름을 반환
+        return "editProduct";
     }
 
     @PostMapping("/edit/{id}")
+    @Operation(summary = "상품 수정", description = "지정된 상품 ID에 해당하는 상품을 수정합니다.")
     public String updateProduct(@PathVariable("id") Long id, @Valid @ModelAttribute("product") ProductDTO productDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "editProduct";
@@ -96,12 +105,12 @@ public class ProductWebController {
     }
 
     @GetMapping("/delete/{id}")
+    @Operation(summary = "상품 삭제", description = "지정된 상품 ID에 해당하는 상품을 삭제합니다.")
     public String deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return "redirect:/web/products/list";
     }
 
-    // 규칙 3가지
     private void validateProductName(String name) {
         if (name.length() > 20) {
             throw new InvalidProductNameException(ErrorCode.INVALID_NAME_LENGTH);
