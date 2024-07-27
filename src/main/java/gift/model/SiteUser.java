@@ -17,11 +17,19 @@ public class SiteUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
 	@Column(unique = true , nullable = false)
 	private String username;
 	@Column(nullable = false)
 	private String password;
 	@Column(unique = true , nullable = false)
 	private String email;
+
+	public SiteUser() {
+	}
+
+	public SiteUser(String username, String password, String email) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+	}
 }

@@ -5,7 +5,6 @@ import gift.dto.Response.AccessTokenResponse;
 import gift.model.SiteUser;
 import gift.repository.UserRepository;
 import gift.service.KakaoLoginService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
@@ -33,13 +33,14 @@ public class KakaoLoginController {
     @Value("${kakao.redirect-uri}")
     private String redirectUri;
 
+    private final KakaoLoginService kakaoLoginService;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private KakaoLoginService kakaoLoginService;
-
-    @Autowired
-    private UserRepository userRepository;
-
+    // 생성자 주입 방식으로 변경
+    public KakaoLoginController(KakaoLoginService kakaoLoginService, UserRepository userRepository) {
+        this.kakaoLoginService = kakaoLoginService;
+        this.userRepository = userRepository;
+    }
 
     @RequestMapping("/login/kakao")
     public void redirectToKakao(HttpServletResponse response) throws IOException {
@@ -76,10 +77,7 @@ public class KakaoLoginController {
 
                 Optional<SiteUser> userOptional = userRepository.findByUsername(nickname);
                 if (userOptional.isEmpty()) {
-                    SiteUser newUser = new SiteUser();
-                    newUser.setUsername(nickname);
-                    newUser.setPassword("");
-                    newUser.setEmail("");
+                    SiteUser newUser = new SiteUser(nickname, "", "");
                     userRepository.save(newUser);
                 }
 
